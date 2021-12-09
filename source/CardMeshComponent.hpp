@@ -1,20 +1,39 @@
 #ifndef CARDMESHCOMPONENT_HPP
 #define CARDMESHCOMPONENT_HPP
 
-#include <UrsineEngine/MeshComponent.hpp>
-#include <UrsineEngine/Texture.hpp>
+#include <MeshComponent.hpp>
+#include <Texture.hpp>
 
 #include "CardObject.hpp"
 
-using UrsineRenderer::MeshComponent;
-using UrsineRenderer::Texture;
-
 namespace DeckOfIllusions
 {
-  class CardMeshComponent : public MeshComponent
+  class CardMeshComponent : public UrsineEngine::MeshComponent
   {
     public:
-      CardMeshComponent(const CardData& aData);
+
+      /**
+       * Constructor.
+       */
+      CardMeshComponent();
+
+      /**
+       * Updates the component.
+       */
+      void Update() override;
+
+      /**
+       * Updates the mesh's texture to reflect the given card.
+       *
+       * @param aCard The card this mesh should display.
+       */
+      void UpdateCardData(const Card& aCard);
+
+      /**
+       * Begins fading the card out of view. Once the card is fully
+       * transparent, the CardFinishedFading signal is notified in Update().
+       */
+      void BeginFading();
 
     private:
       enum class Corner
@@ -25,13 +44,40 @@ namespace DeckOfIllusions
         eBOTTOM_RIGHT
       };
 
+      /**
+       * Creates the shader object(s) for this component.
+       */
       void SetupShaders();
-      void SetupVertexInfo(const CardData& aData);
 
-      glm::vec2 GetTextureCoords(const Texture& aTexture,
-                                 const CardData& aData,
+      /**
+       * Determines the model and texture coordinates for this mesh based on
+       * the given card.
+       *
+       * @param aCard The card this mesh should display.
+       */
+      void SetupVertexInfo(const Card& aCard);
+
+      /**
+       * Returns the texture coordinates for a given corner of a given card.
+       *
+       * @param aTexture A texture atlas containing all images of all cards.
+       * @param aCard The card this mesh should display.
+       * @param aCorner The corner of the card to find on the atlas.
+       * @param aBack Whether to calculate coordinates for the front or back
+       *              of the card.
+       * @return A 2D vector containing the texture coordinates for the given
+       *         corner of the given card.
+       */
+      glm::vec2 GetTextureCoords(const UrsineEngine::Texture& aTexture,
+                                 const Card& aCard,
                                  const Corner& aCorner,
                                  bool aBack = false);
+
+      float mFadeTime;
+      float mTimeSpentFading;
+      float mTimeBeganFading;
+
+      bool mFading;
   };
 }
 

@@ -1,55 +1,48 @@
 #ifndef CARDOBJECT_HPP
 #define CARDOBJECT_HPP
 
-#include <UrsineEngine/GameObject.hpp>
+#include <GameObject.hpp>
+
+#include "Card.hpp"
 
 namespace DeckOfIllusions
 {
-  enum class Rank
-  {
-    eTWO,
-    eEIGHT,
-    eNINE,
-    eTEN,
-    eJACK,
-    eQUEEN,
-    eKING,
-    eACE,
-    eJOKER
-  };
-
-  enum class Suit
-  {
-    eCLUBS,
-    eDIAMONDS,
-    eSPADES,
-    eHEARTS,
-    eJOKER
-  };
-
-  struct CardData
-  {
-    Rank mRank;
-    Suit mSuit;
-    std::string mDescription;
-  };
-
-  class CardObject : public UrsineCore::GameObject
+  class CardObject : public UrsineEngine::GameObject
   {
     public:
-      CardObject(const CardData& aData, const std::string& aName = "Card");
 
-      CardData GetData() const { return mData; }
+      /**
+       * Constructor.
+       *
+       * @param aName The name for this GameObject.
+       */
+      CardObject(const std::string& aName = "Card");
+
+      /**
+       * Updates this GameObject to reflect the given card.
+       *
+       * @param aCard The card this object should represent.
+       */
+      void UpdateCardData(const Card& aCard);
+
+      /**
+       * Returns the card this object is based on.
+       *
+       * @return The card this object is based on.
+       */
+      Card GetCardData() const { return mCardData; }
 
     private:
-      CardData mData;
+      Card mCardData;
   };
 
-  typedef UrsineCore::SignalT<CardObject*> CardFinishedMovingSignal;
-  typedef UrsineCore::SignalT<CardObject*> CardFinishedRotatingSignal;
+  typedef UrsineEngine::SignalT<CardObject*> CardFinishedMovingSignal;
+  typedef UrsineEngine::SignalT<CardObject*> CardFinishedRotatingSignal;
+  typedef UrsineEngine::SignalT<CardObject*> CardFinishedFadingSignal;
 
   extern CardFinishedMovingSignal   CardFinishedMoving;
   extern CardFinishedRotatingSignal CardFinishedRotating;
+  extern CardFinishedFadingSignal   CardFinishedFading;
 }
 
 #endif

@@ -1,90 +1,124 @@
 #include "CardMeshComponent.hpp"
 
-#include <cmrc/cmrc.hpp>
+#include <iostream>
 
-CMRC_DECLARE(ShaderLib_Deck);
-
-using UrsineRenderer::MeshVertex;
-using UrsineRenderer::Shader;
+#include <Environment.hpp>
 
 using DeckOfIllusions::CardMeshComponent;
 
-CardMeshComponent::CardMeshComponent(const CardData& aData)
+int gCardWidthInPixels = 539;
+int gCardHeightInPixels = 766;
+
+/******************************************************************************/
+CardMeshComponent::CardMeshComponent()
   : MeshComponent()
+  , mFadeTime(0.5)
+  , mTimeSpentFading(0.0)
+  , mTimeBeganFading(0.0)
+  , mFading(false)
 {
   SetupShaders();
-  SetupVertexInfo(aData);
-  SetCurrentShader("cardVanishingShader");
+  SetCurrentShader("cardShader");
 }
 
+/******************************************************************************/
+void CardMeshComponent::Update()
+{
+  if(mFading)
+  {
+    mTimeSpentFading = env.GetTime() - mTimeBeganFading;
+    float transparency = 1.0 - (mTimeSpentFading / mFadeTime);
+
+    GetCurrentShader()->Activate();
+    GetCurrentShader()->SetFloat("transparency", transparency);
+
+    if(transparency <= 0.0)
+    {
+      auto cardObj = dynamic_cast<CardObject*>(GetParent());
+      CardFinishedFading.Notify(cardObj);
+    }
+  }
+}
+
+/******************************************************************************/
+void CardMeshComponent::UpdateCardData(const Card& aCard)
+{
+  SetupVertexInfo(aCard);
+}
+
+/******************************************************************************/
+void CardMeshComponent::BeginFading()
+{
+  mTimeBeganFading = env.GetTime();
+  mFading = true;
+}
+
+/******************************************************************************/
 void CardMeshComponent::SetupShaders()
 {
-  auto fs = cmrc::ShaderLib_Deck::get_filesystem();
-  auto vertexFile = fs.open("resources/shaders/CardShader.vert");
-  auto fragmentFile = fs.open("resources/shaders/CardShader.frag");
+  std::string vertexFile = "resources/shaders/CardShader.vert";
+  std::string fragmentFile = "resources/shaders/CardShader.frag";
 
-  Shader cardShader(vertexFile.begin(), fragmentFile.begin());
-  cardShader.SetInt("texSampler", 0);
+  UrsineEngine::Shader cardShader(vertexFile, fragmentFile);
+  cardShader.Activate();
+  cardShader.SetFloat("transparency", 1.0);
   AddShader("cardShader", cardShader);
-
-  fs = cmrc::ShaderLib_Deck::get_filesystem();
-  vertexFile = fs.open("resources/shaders/CardVanishingShader.vert");
-  fragmentFile = fs.open("resources/shaders/CardVanishingShader.frag");
-
-  Shader cardVanishingShader(vertexFile.begin(), fragmentFile.begin());
-  cardShader.SetInt("texSampler", 0);
-  AddShader("cardVanishingShader", cardVanishingShader);
 }
 
-void CardMeshComponent::SetupVertexInfo(const CardData& aData)
+/******************************************************************************/
+void CardMeshComponent::SetupVertexInfo(const Card& aCard)
 {
   // Create the 3D vertices for thix card.
-  MeshVertex vertex;
+  UrsineEngine::MeshVertex vertex;
 
   // Add the deck texture to this card.
-  Texture deck;
+  UrsineEngine::Texture deck;
   deck.CreateTextureFromFile("resources/textures/deck.png");
   AddTexture(deck);
 
-  // Determine the NDC for a single card.
-  double magnitude = sqrt((pow(539, 2) + pow(766, 2)));
-  double xVal = 539.0 / magnitude;
-  double yVal = 766.0 / magnitude;
+  // Create model space coordinates for the card by normalizing
+  // its width and height in pixels.
+  double magnitude = sqrt((pow(gCardWidthInPixels, 2) + pow(gCardHeightInPixels, 2)));
+  double width = (double)gCardWidthInPixels / magnitude;
+  double height = (double)gCardHeightInPixels / magnitude;
+
+  double xVal = width / 2.0;
+  double yVal = height / 2.0;
 
   // Front side
   vertex.mPosition = glm::vec3(-xVal, -yVal, 0.0);
   vertex.mColor = glm::vec3(1.0, 0.0, 0.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eBOTTOM_LEFT);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eBOTTOM_LEFT);
   AddVertex(vertex);
   vertex.mPosition = glm::vec3(xVal, -yVal, 0.0);
   vertex.mColor = glm::vec3(0.0, 1.0, 0.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eBOTTOM_RIGHT);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eBOTTOM_RIGHT);
   AddVertex(vertex);
   vertex.mPosition = glm::vec3(xVal, yVal, 0.0);
   vertex.mColor = glm::vec3(0.0, 0.0, 1.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eTOP_RIGHT);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eTOP_RIGHT);
   AddVertex(vertex);
   vertex.mPosition = glm::vec3(-xVal, yVal, 0.0);
   vertex.mColor = glm::vec3(1.0, 0.0, 0.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eTOP_LEFT);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eTOP_LEFT);
   AddVertex(vertex);
 
   // Back side
   vertex.mPosition = glm::vec3(-xVal, -yVal, -0.01);
   vertex.mColor = glm::vec3(0.0, 1.0, 0.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eBOTTOM_LEFT, true);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eBOTTOM_LEFT, true);
   AddVertex(vertex);
   vertex.mPosition = glm::vec3(xVal, -yVal, -0.01);
   vertex.mColor = glm::vec3(0.0, 0.0, 1.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eBOTTOM_RIGHT, true);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eBOTTOM_RIGHT, true);
   AddVertex(vertex);
   vertex.mPosition = glm::vec3(xVal, yVal, -0.01);
   vertex.mColor = glm::vec3(1.0, 0.0, 0.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eTOP_RIGHT, true);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eTOP_RIGHT, true);
   AddVertex(vertex);
   vertex.mPosition = glm::vec3(-xVal, yVal, -0.01);
   vertex.mColor = glm::vec3(0.0, 1.0, 0.0);
-  vertex.mTexCoords = GetTextureCoords(deck, aData, Corner::eTOP_LEFT, true);
+  vertex.mTexCoords = GetTextureCoords(deck, aCard, Corner::eTOP_LEFT, true);
   AddVertex(vertex);
 
   // Specify the order in which to draw these vertices.
@@ -137,8 +171,8 @@ void CardMeshComponent::SetupVertexInfo(const CardData& aData)
   AddIndex(3);
 }
 
-glm::vec2 CardMeshComponent::GetTextureCoords(const Texture& aTexture,
-                                              const CardData& aData,
+glm::vec2 CardMeshComponent::GetTextureCoords(const UrsineEngine::Texture& aTexture,
+                                              const Card& aCard,
                                               const Corner& aCorner,
                                               bool aBack)
 {
@@ -152,7 +186,7 @@ glm::vec2 CardMeshComponent::GetTextureCoords(const Texture& aTexture,
   else
   {
     // Suits are organized in the deck texture by row.
-    switch(aData.mSuit)
+    switch(aCard.mSuit)
     {
       case Suit::eCLUBS:
       {
@@ -182,7 +216,7 @@ glm::vec2 CardMeshComponent::GetTextureCoords(const Texture& aTexture,
     }
 
     // Each row of a suit is placed in ascending order by rank.
-    switch(aData.mRank)
+    switch(aCard.mRank)
     {
       case Rank::eTWO:
       case Rank::eJOKER:

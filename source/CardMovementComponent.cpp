@@ -1,9 +1,8 @@
 #include "CardMovementComponent.hpp"
 
-#include <iostream>
-
 using DeckOfIllusions::CardMovementComponent;
 
+/******************************************************************************/
 CardMovementComponent::CardMovementComponent()
   : Component()
   , mTargetPosition(0.0, 0.0, 0.0)
@@ -30,7 +29,6 @@ void CardMovementComponent::Update()
        fabs(vec.y - mTargetPosition.y) < 0.005 &&
        fabs(vec.z - mTargetPosition.z) < 0.005)
     {
-      std::cout << "finished moving" << std::endl;
       // Finalize the translation.
       GetParent()->SetPosition(mTargetPosition);
 
@@ -53,7 +51,6 @@ void CardMovementComponent::Update()
   {
     if(fabs(mTargetRotation - mCurrentRotation) < 0.5)
     {
-      std::cout << "finished rotating" << std::endl;
       // Finalize the rotation.
       GetParent()->Rotate(mTargetRotation - mCurrentRotation, mRotationAxis);
 

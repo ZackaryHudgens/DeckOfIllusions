@@ -9,8 +9,10 @@ out vec4 fragColor;
 
 // Uniform variables
 uniform sampler2D texSampler;
+uniform float transparency;
 
 void main()
 {
   fragColor = texture(texSampler, texCoords);
+  fragColor.a = transparency;
 }

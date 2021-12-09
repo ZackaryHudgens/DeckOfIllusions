@@ -1,33 +1,17 @@
 #include "DeckObject.hpp"
 
-#include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <random>
+#include "DeckBehaviorComponent.hpp"
 
-#include <UrsineEngine/Environment.hpp>
-
-#include "DeckInputComponent.hpp"
-#include "CardMovementComponent.hpp"
-
-using DeckOfIllusions::CardData;
 using DeckOfIllusions::DeckObject;
-using DeckOfIllusions::Rank;
-using DeckOfIllusions::Suit;
 
-/**
- * The constructor for the DeckObject.
- *
- * @param aName The name to assign to this GameObject.
- */
+/******************************************************************************/
 DeckObject::DeckObject(const std::string& aName)
   : GameObject(aName)
-  , mState(DeckState::eIDLE)
 {
   /**
    * Connect signals.
    */
-  UrsineCore::ObjectMoved.Connect(*this, [this](GameObject* aObject)
+  UrsineEngine::ObjectMoved.Connect(*this, [this](GameObject* aObject)
   {
     this->HandleObjectMoved(aObject);
   });
@@ -37,50 +21,32 @@ DeckObject::DeckObject(const std::string& aName)
     this->HandleCardFinishedMoving(aCard);
   });
 
+  CardFinishedRotating.Connect(*this, [this](CardObject* aCard)
+  {
+    this->HandleCardFinishedRotating(aCard);
+  });
+
+  CardFinishedFading.Connect(*this, [this](CardObject* aCard)
+  {
+    this->HandleCardFinishedFading(aCard);
+  });
+
   /**
    * Add components.
    */
-  AddComponent(std::make_unique<DeckInputComponent>());
+  AddComponent(std::make_unique<DeckBehaviorComponent>());
 }
 
-/**
- * Loads the deck from a file, creating a CardObject for each valid
- * line of data.
- *
- * @param aFile The file to load from.
- * @return True if successful, false otherwise.
- */
+/******************************************************************************/
 bool DeckObject::LoadDeckFromFile(const std::string& aFile)
 {
-  bool success = true;
+  bool success = false;
+  success = mDeck.LoadDeckFromFile(aFile);
 
-  std::ifstream in;
-  in.open(aFile);
-
-  success = in.is_open();
   if(success)
   {
-    std::string line;
-    while(std::getline(in, line))
-    {
-      CardData data;
-      success = ParseDataString(data, line);
-      if(success)
-      {
-        AddCard(data);
-      }
-      else
-      {
-        std::cout << "Couldn't parse line: " << line << std::endl;
-      }
-    }
+    // Add a card for each one in the deck.
   }
-  else
-  {
-    std::cout << "Couldn't open file: " << aFile << std::endl;
-  }
-
-  in.close();
 
   return success;
 }
@@ -191,6 +157,30 @@ void DeckObject::FlipCard()
         for(auto& moveComponent : mCards.back()->GetComponentsOfType<CardMovementComponent>())
         {
           moveComponent->RotateTo(180, glm::vec3(0.0, 1.0, 0.0), 0.3);
+        }
+      }
+      break;
+    }
+    default:
+    {
+      break;
+    }
+  }
+}
+
+/******************************************************************************/
+void DeckObject::FadeCard()
+{
+  switch(mState)
+  {
+    case DeckState::eREADING:
+    {
+      if(!mCards.empty())
+      {
+        auto mesh = mCards.back()->GetFirstComponentOfType<CardMeshComponent>();
+        if(mesh != nullptr)
+        {
+          mesh->BeginFading();
         }
       }
       break;
@@ -419,7 +409,7 @@ void DeckObject::HandleObjectMoved(GameObject* aObject)
         {
           if(cardObj == mCards.back())
           {
-            Camera* cam = env.GetCurrentScene()->GetDefaultCamera();
+            auto cam = env.GetCurrentScene()->GetDefaultCamera();
 
             // Stay level with the card.
             cam->SetPosition(glm::vec3(cam->GetPosition().x,
@@ -479,6 +469,55 @@ void DeckObject::HandleCardFinishedMoving(CardObject* aCard)
     default:
     {
       break;
+    }
+  }
+}
+
+/******************************************************************************/
+void DeckObject::HandleCardFinishedRotating(CardObject* aCard)
+{
+  if(!mCards.empty())
+  {
+    if(aCard == mCards.back())
+    {
+      switch(mState)
+      {
+        case DeckState::eWAITING_FOR_FLIP:
+        {
+          mState = DeckState::eREADING;
+          break;
+        }
+        default:
+        {
+          break;
+        }
+      }
+    }
+  }
+}
+
+/******************************************************************************/
+void DeckObject::HandleCardFinishedFading(CardObject* aCard)
+{
+  if(!mCards.empty())
+  {
+    if(aCard == mCards.back())
+    {
+      switch(mState)
+      {
+        case DeckState::eREADING:
+        {
+          auto cam = env.GetCurrentScene()->GetDefaultCamera();
+          cam->SetPosition(glm::vec3(0.0, 0.0, 0.0));
+
+          mState = DeckState::eIDLE;
+          break;
+        }
+        default:
+        {
+          break;
+        }
+      }
     }
   }
 }

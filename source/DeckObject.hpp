@@ -1,52 +1,47 @@
 #ifndef DECKOBJECT_HPP
 #define DECKOBJECT_HPP
 
-#include <UrsineEngine/GameObject.hpp>
+#include <GameObject.hpp>
 
 #include "CardObject.hpp"
-
-using UrsineCore::GameObject;
+#include "Deck.hpp"
 
 namespace DeckOfIllusions
 {
-  enum class DeckState
-  {
-    eIDLE,
-    eADDING_CARD,
-    eDRAWING_CARD,
-    eWAITING_FOR_FLIP
-  };
-
-  class DeckObject : public GameObject
+  class DeckObject : public UrsineEngine::GameObject
   {
     public:
+
+      /**
+       * Constructor.
+       *
+       * @param aName The name for this GameObject.
+       */
       DeckObject(const std::string& aName = "Deck");
 
+      /**
+       * Loads a deck from an external file. See "deck.txt" in the
+       * resources directory for what a full deck looks like.
+       *
+       * @param aFile The file to load.
+       * @return True if successful, false otherwise.
+       */
       bool LoadDeckFromFile(const std::string& aFile);
-      void AddCard(const CardData& aData);
-
-      DeckState GetState() const { return mState; }
 
       void Draw();
       void FlipCard();
+      void FadeCard();
       void Shuffle();
 
     private:
-      bool ParseDataString(CardData& aData,
-                           const std::string& aLine);
-      bool GetSuitFromCharacter(CardData& aData,
-                                const char& aChar);
-      bool GetRankFromCharacter(CardData& aData,
-                                const char& aChar);
       void AddIndexToName(std::string& aName) const;
 
       void HandleObjectMoved(GameObject* aObject);
       void HandleCardFinishedMoving(CardObject* aCard);
       void HandleCardFinishedRotating(CardObject* aCard);
+      void HandleCardFinishedFading(CardObject* aCard);
 
-      DeckState mState;
-
-      std::vector<CardObject*> mCards;
+      Deck mDeck;
   };
 }
 

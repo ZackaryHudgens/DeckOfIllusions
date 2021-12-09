@@ -1,22 +1,23 @@
-#include <UrsineEngine/Environment.hpp>
-#include <UrsineEngine/Scene.hpp>
+#include <Environment.hpp>
+#include <Scene.hpp>
 
 #include "CardObject.hpp"
 #include "DeckObject.hpp"
 
-using UrsineCore::Scene;
+using UrsineEngine::Scene;
 
 using DeckOfIllusions::DeckObject;
 
 int main()
 {
-  UrsineCore::GraphicsOptions gOptions;
+  UrsineEngine::GraphicsOptions gOptions;
   gOptions.mTitle = "Deck of Illusions";
   gOptions.mWidth = 800;
   gOptions.mHeight = 600;
+  gOptions.mCursorMode = UrsineEngine::CursorMode::eNORMAL;
 
   env.Initialize(gOptions);
-  UrsineCore::Scene scene;
+  Scene scene;
 
   // Create a DeckObject.
   auto deck = std::make_unique<DeckObject>();

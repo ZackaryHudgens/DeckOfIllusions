@@ -1,24 +1,50 @@
 #ifndef CARDMOVEMENTCOMPONENT_HPP
 #define CARDMOVEMENTCOMPONENT_HPP
 
-#include <UrsineEngine/Component.hpp>
-#include <UrsineEngine/GameObject.hpp>
-#include <UrsineEngine/Signal.hpp>
+#include <Component.hpp>
+#include <GameObject.hpp>
+#include <Signal.hpp>
 
 #include "CardObject.hpp"
 
-using UrsineCore::Component;
-
 namespace DeckOfIllusions
 {
-  class CardMovementComponent : public Component
+  class CardMovementComponent : public UrsineEngine::Component
   {
     public:
+
+      /**
+       * Constructor.
+       */
       CardMovementComponent();
 
+      /**
+       * Updates the component.
+       */
       void Update() override;
 
-      void MoveTo(const glm::vec3& aPosition, double aSpeed);
+      /**
+       * Moves the parent GameObject to the given position at the given speed.
+       * Once the object has finished moving, the CardFinishedMoving signal is
+       * notified in Update(). Movement is interpolated, so the object will
+       * slow down as it approaches its destination.
+       *
+       * @param aPosition The position in world space to move to.
+       * @param aSpeed The speed at which to move.
+       */
+      void MoveTo(const glm::vec3& aPosition,
+                  double aSpeed);
+
+      /**
+       * Rotates the parent GameObject on the given axis at the given speed.
+       * Once the object has finished rotating, the CardFinishedRotating signal
+       * is notified in Update(). Rotation is interpolated, so the object will
+       * slow down as it approaches its destination.
+       *
+       * @param aDegrees The amount to rotate in degrees.
+       * @param aAxis The axis in model space on which to rotate.
+       * @param aSpeed The speed at which to move.
+       */
       void RotateTo(double aDegrees,
                     const glm::vec3& aAxis,
                     double aSpeed);
