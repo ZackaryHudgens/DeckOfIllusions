@@ -59,13 +59,10 @@ bool DeckBehaviorComponent::LoadDeckFromFile(const std::string& aFile)
       }
 
       // For each card in the deck, create a new CardObject and add it.
-      //for(const auto& card : mDeck.GetCards())
-      //{
-      //  AddCard(card);
-      //}
-      AddCard(mDeck.GetCards().back());
-
-      //TODO: the deleted card still tries to update in GameObject::Update
+      for(const auto& card : mDeck.GetCards())
+      {
+        AddCard(card);
+      }
     }
   }
 
@@ -379,6 +376,7 @@ void DeckBehaviorComponent::HandleCardFinishedFading(CardObject* aCard)
             // Remove the card from the deck and from the parent object.
             mDeck.GetCards().pop_back();
             parent->RemoveChild(cardObj->GetName());
+
             mState = State::eIDLE;
           }
         }

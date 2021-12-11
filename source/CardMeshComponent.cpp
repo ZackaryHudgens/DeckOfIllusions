@@ -68,6 +68,7 @@ void CardMeshComponent::SetupShaders()
 /******************************************************************************/
 void CardMeshComponent::SetupVertexInfo(const Card& aCard)
 {
+  // Remove any previous vertices and textures
   // Create the 3D vertices for thix card.
   UrsineEngine::MeshVertex vertex;
 
