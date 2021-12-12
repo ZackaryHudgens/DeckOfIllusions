@@ -17,6 +17,11 @@ CardMeshComponent::CardMeshComponent()
   , mTimeBeganFading(0.0)
   , mFading(false)
 {
+  // Add the deck texture to this card.
+  UrsineEngine::Texture deck;
+  deck.CreateTextureFromFile("resources/textures/deck.png");
+  AddTexture(deck);
+
   SetupShaders();
   SetCurrentShader("cardShader");
 }
@@ -68,14 +73,11 @@ void CardMeshComponent::SetupShaders()
 /******************************************************************************/
 void CardMeshComponent::SetupVertexInfo(const Card& aCard)
 {
-  // Remove any previous vertices and textures
+  // Remove any previous vertices.
+  GetVertices().clear();
+
   // Create the 3D vertices for thix card.
   UrsineEngine::MeshVertex vertex;
-
-  // Add the deck texture to this card.
-  UrsineEngine::Texture deck;
-  deck.CreateTextureFromFile("resources/textures/deck.png");
-  AddTexture(deck);
 
   // Create model space coordinates for the card by normalizing
   // its width and height in pixels.
@@ -85,6 +87,9 @@ void CardMeshComponent::SetupVertexInfo(const Card& aCard)
 
   double xVal = width / 2.0;
   double yVal = height / 2.0;
+
+  // Get the deck texture.
+  auto deck = GetTextures().back();
 
   // Front side
   vertex.mPosition = glm::vec3(-xVal, -yVal, 0.0);
