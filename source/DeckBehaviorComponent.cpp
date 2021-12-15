@@ -25,17 +25,17 @@ DeckBehaviorComponent::DeckBehaviorComponent()
     this->HandleKeyPress(aCode, aMods);
   });
 
-  CardFinishedMoving.Connect(*this, [this](CardObject* aCard)
+  CardFinishedMoving.Connect(*this, [this](CardObject& aCard)
   {
     this->HandleCardFinishedMoving(aCard);
   });
 
-  CardFinishedRotating.Connect(*this, [this](CardObject* aCard)
+  CardFinishedRotating.Connect(*this, [this](CardObject& aCard)
   {
     this->HandleCardFinishedRotating(aCard);
   });
 
-  CardFinishedFading.Connect(*this, [this](CardObject* aCard)
+  CardFinishedFading.Connect(*this, [this](CardObject& aCard)
   {
     this->HandleCardFinishedFading(aCard);
   });
@@ -204,6 +204,12 @@ void DeckBehaviorComponent::HandleKeyPress(const UrsineEngine::KeyCode& aCode,
                                         0.3);
 
                 mState = State::eDRAWING_CARD;
+
+                auto deckObj = dynamic_cast<DeckObject*>(parent);
+                if(deckObj != nullptr)
+                {
+                  CardDrawn.Notify(*deckObj);
+                }
               }
             }
           }
@@ -279,7 +285,7 @@ void DeckBehaviorComponent::HandleKeyPress(const UrsineEngine::KeyCode& aCode,
 }
 
 /******************************************************************************/
-void DeckBehaviorComponent::HandleCardFinishedMoving(CardObject* aCard)
+void DeckBehaviorComponent::HandleCardFinishedMoving(CardObject& aCard)
 {
   switch(mState)
   {
@@ -293,7 +299,7 @@ void DeckBehaviorComponent::HandleCardFinishedMoving(CardObject* aCard)
         if(!parent->GetChildrenOfType<CardObject>().empty())
         {
           auto cardObj = parent->GetChildrenOfType<CardObject>().back();
-          if(aCard == cardObj)
+          if(&aCard == cardObj)
           {
             mState = State::eIDLE;
           }
@@ -311,7 +317,7 @@ void DeckBehaviorComponent::HandleCardFinishedMoving(CardObject* aCard)
         if(!parent->GetChildrenOfType<CardObject>().empty())
         {
           auto cardObj = parent->GetChildrenOfType<CardObject>().back();
-          if(aCard == cardObj)
+          if(&aCard == cardObj)
           {
             mState = State::eWAITING_FOR_FLIP;
           }
@@ -327,7 +333,7 @@ void DeckBehaviorComponent::HandleCardFinishedMoving(CardObject* aCard)
 }
 
 /******************************************************************************/
-void DeckBehaviorComponent::HandleCardFinishedRotating(CardObject* aCard)
+void DeckBehaviorComponent::HandleCardFinishedRotating(CardObject& aCard)
 {
   switch(mState)
   {
@@ -341,7 +347,7 @@ void DeckBehaviorComponent::HandleCardFinishedRotating(CardObject* aCard)
         if(!parent->GetChildrenOfType<CardObject>().empty())
         {
           auto cardObj = parent->GetChildrenOfType<CardObject>().back();
-          if(aCard == cardObj)
+          if(&aCard == cardObj)
           {
             mState = State::eWAITING_FOR_FADE;
           }
@@ -357,7 +363,7 @@ void DeckBehaviorComponent::HandleCardFinishedRotating(CardObject* aCard)
 }
 
 /******************************************************************************/
-void DeckBehaviorComponent::HandleCardFinishedFading(CardObject* aCard)
+void DeckBehaviorComponent::HandleCardFinishedFading(CardObject& aCard)
 {
   switch(mState)
   {
@@ -371,7 +377,7 @@ void DeckBehaviorComponent::HandleCardFinishedFading(CardObject* aCard)
         if(!parent->GetChildrenOfType<CardObject>().empty())
         {
           auto cardObj = parent->GetChildrenOfType<CardObject>().back();
-          if(aCard == cardObj)
+          if(&aCard == cardObj)
           {
             // Remove the card from the deck and from the parent object.
             mDeck.GetCards().pop_back();

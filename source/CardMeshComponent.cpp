@@ -40,7 +40,10 @@ void CardMeshComponent::Update()
     if(transparency <= 0.0)
     {
       auto cardObj = dynamic_cast<CardObject*>(GetParent());
-      CardFinishedFading.Notify(cardObj);
+      if(cardObj != nullptr)
+      {
+        CardFinishedFading.Notify(*cardObj);
+      }
     }
   }
 }
@@ -54,8 +57,11 @@ void CardMeshComponent::UpdateCardData(const Card& aCard)
 /******************************************************************************/
 void CardMeshComponent::BeginFading()
 {
-  mTimeBeganFading = env.GetTime();
-  mFading = true;
+  if(!mFading)
+  {
+    mTimeBeganFading = env.GetTime();
+    mFading = true;
+  }
 }
 
 /******************************************************************************/

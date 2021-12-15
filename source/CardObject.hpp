@@ -36,9 +36,9 @@ namespace DeckOfIllusions
       Card mCardData;
   };
 
-  typedef UrsineEngine::SignalT<CardObject*> CardFinishedMovingSignal;
-  typedef UrsineEngine::SignalT<CardObject*> CardFinishedRotatingSignal;
-  typedef UrsineEngine::SignalT<CardObject*> CardFinishedFadingSignal;
+  typedef UrsineEngine::SignalT<CardObject&> CardFinishedMovingSignal;
+  typedef UrsineEngine::SignalT<CardObject&> CardFinishedRotatingSignal;
+  typedef UrsineEngine::SignalT<CardObject&> CardFinishedFadingSignal;
 
   extern CardFinishedMovingSignal   CardFinishedMoving;
   extern CardFinishedRotatingSignal CardFinishedRotating;

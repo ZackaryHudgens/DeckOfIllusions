@@ -75,7 +75,7 @@ namespace DeckOfIllusions
        *
        * @param aCard The CardObject in question.
        */
-      void HandleCardFinishedMoving(CardObject* aCard);
+      void HandleCardFinishedMoving(CardObject& aCard);
 
       /**
        * A handler function that gets called whenever a CardObject finishes
@@ -83,7 +83,7 @@ namespace DeckOfIllusions
        *
        * @param aCard The CardObject in question.
        */
-      void HandleCardFinishedRotating(CardObject* aCard);
+      void HandleCardFinishedRotating(CardObject& aCard);
 
       /**
        * A handler function that gets called whenever a CardObject finishes
@@ -91,7 +91,7 @@ namespace DeckOfIllusions
        *
        * @param aCard The CardObject in question.
        */
-      void HandleCardFinishedFading(CardObject* aCard);
+      void HandleCardFinishedFading(CardObject& aCard);
 
       Deck mDeck;
       State mState;

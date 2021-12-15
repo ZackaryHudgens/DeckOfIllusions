@@ -36,6 +36,10 @@ namespace DeckOfIllusions
        */
       void Shuffle();
   };
+
+  typedef UrsineEngine::SignalT<DeckObject&> CardDrawnSignal;
+
+  extern CardDrawnSignal CardDrawn;
 }
 
 #endif

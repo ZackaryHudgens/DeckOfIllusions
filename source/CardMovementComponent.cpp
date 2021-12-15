@@ -34,7 +34,10 @@ void CardMovementComponent::Update()
 
       // Use the signal to notify everyone that we've finished moving.
       CardObject* cardObj = dynamic_cast<CardObject*>(GetParent());
-      CardFinishedMoving.Notify(cardObj);
+      if(cardObj != nullptr)
+      {
+        CardFinishedMoving.Notify(*cardObj);
+      }
 
       mMoving = false;
     }
@@ -56,7 +59,10 @@ void CardMovementComponent::Update()
 
       // Use the signal to notify everyone that we've finished rotating.
       CardObject* cardObj = dynamic_cast<CardObject*>(GetParent());
-      CardFinishedRotating.Notify(cardObj);
+      if(cardObj != nullptr)
+      {
+        CardFinishedRotating.Notify(*cardObj);
+      }
 
       mCurrentRotation = 0.0;
       mRotating = false;
