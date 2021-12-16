@@ -2,7 +2,9 @@
 #include <Scene.hpp>
 
 #include "CameraMovementComponent.hpp"
+#include "CardTextBehaviorComponent.hpp"
 #include "DeckObject.hpp"
+#include "UITextObject.hpp"
 
 using UrsineEngine::Scene;
 
@@ -25,6 +27,14 @@ int main()
   deck->Translate(glm::vec3(0.0, 0.0, -5.0));
   deck->LoadDeckFromFile("resources/deck.txt");
 
+  // Create a UITextObject and add the card behavior component.
+  auto textObj = std::make_unique<DeckOfIllusions::UITextObject>();
+  auto behaviorComp = std::make_unique<DeckOfIllusions::CardTextBehaviorComponent>();
+  behaviorComp->ObserveDeck(*deck.get());
+  textObj->AddComponent(std::move(behaviorComp));
+  textObj->SetPosition(glm::vec3(0.0, 200.0, 0.0));
+
+  // Add the movement component to the camera.
   auto cam = dynamic_cast<UrsineEngine::Camera*>(scene.GetObject("Camera"));
   cam->AddComponent(std::make_unique<CameraMovementComponent>());
 
@@ -32,6 +42,7 @@ int main()
   camComp->FollowDeck(*deck.get());
 
   scene.AddObject(std::move(deck));
+  scene.AddObject(std::move(textObj));
 
   env.LoadScene(scene);
   env.Run();
