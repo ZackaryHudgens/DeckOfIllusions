@@ -122,7 +122,7 @@ void DeckBehaviorComponent::AddCard(const Card& aCard)
         cardObj->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
 
         // Rotate the CardObject to lie flat.
-        cardObj->Rotate(90, glm::vec3(1.0, 0.0, 0.0));
+        cardObj->Rotate(55, glm::vec3(1.0, 0.0, 0.0));
 
         // Position the CardObject high above the top of the deck.
         std::vector<CardObject*> cards = parent->GetChildrenOfType<CardObject>();
@@ -199,7 +199,7 @@ void DeckBehaviorComponent::HandleKeyPress(const UrsineEngine::KeyCode& aCode,
                                                   parent->GetPosition().z);
                 moveComponent->MoveTo(destination,
                                       0.3);
-                moveComponent->RotateTo(-90,
+                moveComponent->RotateTo(-55,
                                         glm::vec3(1.0, 0.0, 0.0),
                                         0.3);
 

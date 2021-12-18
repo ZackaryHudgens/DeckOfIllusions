@@ -69,7 +69,7 @@ void CameraMovementComponent::FollowDeck(DeckOfIllusions::DeckObject& aDeck)
   {
     parent->SetPosition(glm::vec3(aDeck.GetPosition().x,
                                   aDeck.GetPosition().y,
-                                  aDeck.GetPosition().z + 5.0));
+                                  aDeck.GetPosition().z + 3.0));
     mFollowedDeck = &aDeck;
   }
 }
@@ -102,7 +102,7 @@ void CameraMovementComponent::HandleObjectMoved(UrsineEngine::GameObject* aObjec
     {
       parent->SetPosition(glm::vec3(mFollowedCard->GetPosition().x,
                                     mFollowedCard->GetPosition().y,
-                                    mFollowedCard->GetPosition().z + 5.0));
+                                    mFollowedCard->GetPosition().z + 3.0));
 
       if(mMovingToDeck)
       {

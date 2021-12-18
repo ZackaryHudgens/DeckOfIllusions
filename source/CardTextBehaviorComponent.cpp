@@ -1,5 +1,6 @@
 #include "CardTextBehaviorComponent.hpp"
 
+#include <Environment.hpp>
 #include <TextComponent.hpp>
 
 #include <iostream>
@@ -49,7 +50,21 @@ void CardTextBehaviorComponent::HandleCardFinishedRotating(CardObject& aCard)
       auto textComp = parent->GetFirstComponentOfType<UrsineEngine::TextComponent>();
       if(textComp != nullptr)
       {
-        textComp->SetText(mCard->GetCardData().mDescription);
+        std::string message = "an image of a(n): ";
+        message += mCard->GetCardData().mDescription;
+        message += "!";
+        textComp->SetText(message);
+
+        // Update the parent object's position to remain centered horizontally.
+        auto dimensions = env.GetWindowDimensions();
+        auto textWidth = textComp->GetWidth();
+        double advance = (double)dimensions.x - (double)textWidth;
+        advance /= 2.0;
+
+        auto position = parent->GetPosition();
+        parent->SetPosition(glm::vec3(advance,
+                                      position.y,
+                                      position.z));
       }
     }
   }

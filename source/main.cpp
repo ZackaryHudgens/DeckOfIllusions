@@ -15,8 +15,8 @@ int main()
 {
   UrsineEngine::GraphicsOptions gOptions;
   gOptions.mTitle = "Deck of Illusions";
-  gOptions.mWidth = 800;
-  gOptions.mHeight = 600;
+  gOptions.mWidth = 1280;
+  gOptions.mHeight = 720;
   gOptions.mCursorMode = UrsineEngine::CursorMode::eNORMAL;
 
   env.Initialize(gOptions);
@@ -32,7 +32,6 @@ int main()
   auto behaviorComp = std::make_unique<DeckOfIllusions::CardTextBehaviorComponent>();
   behaviorComp->ObserveDeck(*deck.get());
   textObj->AddComponent(std::move(behaviorComp));
-  textObj->SetPosition(glm::vec3(0.0, 200.0, 0.0));
 
   // Add the movement component to the camera.
   auto cam = dynamic_cast<UrsineEngine::Camera*>(scene.GetObject("Camera"));
