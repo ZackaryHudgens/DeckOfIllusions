@@ -5,8 +5,6 @@
 
 #include <algorithm>
 
-#include <iostream>
-
 using DeckOfIllusions::CardTextBehaviorComponent;
 
 /******************************************************************************/
@@ -75,8 +73,6 @@ void CardTextBehaviorComponent::Update()
       mTimeSpentFading = env.GetTime() - mTimeBeganFading;
       float transparency = 1.0 - (mTimeSpentFading / mFadeTime);
       transparency = std::max(transparency, 0.0f);
-
-      std::cout << transparency << std::endl;
 
       auto parent = GetParent();
       if(parent != nullptr)
