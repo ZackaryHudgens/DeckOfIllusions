@@ -64,6 +64,8 @@ namespace DeckOfIllusions
       CardObject* mFollowedCard;
       DeckObject* mFollowedDeck;
 
+      double mDistanceFromDeck;
+      double mResetSpeed;
       bool mMovingToDeck;
   };
 }

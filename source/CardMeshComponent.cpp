@@ -61,6 +61,12 @@ void CardMeshComponent::BeginFading()
   {
     mTimeBeganFading = env.GetTime();
     mFading = true;
+
+    auto parent = dynamic_cast<CardObject*>(GetParent());
+    if(parent != nullptr)
+    {
+      CardBeganFading.Notify(*parent);
+    }
   }
 }
 

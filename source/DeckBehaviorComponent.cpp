@@ -350,6 +350,7 @@ void DeckBehaviorComponent::HandleCardFinishedRotating(CardObject& aCard)
           if(&aCard == cardObj)
           {
             mState = State::eWAITING_FOR_FADE;
+            CardRevealed.Notify(*cardObj);
           }
         }
       }

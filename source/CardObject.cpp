@@ -29,6 +29,8 @@ void CardObject::UpdateCardData(const Card& aCard)
   }
 }
 
-DeckOfIllusions::CardFinishedMovingSignal DeckOfIllusions::CardFinishedMoving;
+DeckOfIllusions::CardFinishedMovingSignal   DeckOfIllusions::CardFinishedMoving;
 DeckOfIllusions::CardFinishedRotatingSignal DeckOfIllusions::CardFinishedRotating;
-DeckOfIllusions::CardFinishedFadingSignal DeckOfIllusions::CardFinishedFading;
+DeckOfIllusions::CardBeganFadingSignal      DeckOfIllusions::CardBeganFading;
+DeckOfIllusions::CardFinishedFadingSignal   DeckOfIllusions::CardFinishedFading;
+DeckOfIllusions::CardRevealedSignal         DeckOfIllusions::CardRevealed;

@@ -38,11 +38,15 @@ namespace DeckOfIllusions
 
   typedef UrsineEngine::SignalT<CardObject&> CardFinishedMovingSignal;
   typedef UrsineEngine::SignalT<CardObject&> CardFinishedRotatingSignal;
+  typedef UrsineEngine::SignalT<CardObject&> CardBeganFadingSignal;
   typedef UrsineEngine::SignalT<CardObject&> CardFinishedFadingSignal;
+  typedef UrsineEngine::SignalT<CardObject&> CardRevealedSignal;
 
   extern CardFinishedMovingSignal   CardFinishedMoving;
   extern CardFinishedRotatingSignal CardFinishedRotating;
+  extern CardBeganFadingSignal      CardBeganFading;
   extern CardFinishedFadingSignal   CardFinishedFading;
+  extern CardRevealedSignal         CardRevealed;
 }
 
 #endif

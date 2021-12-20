@@ -28,4 +28,4 @@ bool DeckObject::LoadDeckFromFile(const std::string& aFile)
   return success;
 }
 
-DeckOfIllusions::CardDrawnSignal DeckOfIllusions::CardDrawn;
+DeckOfIllusions::CardDrawnSignal    DeckOfIllusions::CardDrawn;

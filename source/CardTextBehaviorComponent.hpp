@@ -18,6 +18,11 @@ namespace DeckOfIllusions
       CardTextBehaviorComponent();
 
       /**
+       * Updates the component.
+       */
+      void Update() override;
+
+      /**
        * Sets the deck to observe. When a card is drawn from this deck,
        * the displayed text will change to match the card's description.
        *
@@ -26,16 +31,30 @@ namespace DeckOfIllusions
       void ObserveDeck(DeckObject& aDeck);
 
     private:
+      enum class FadeState
+      {
+        eNONE,
+        eFADING_IN,
+        eFADING_OUT
+      };
 
       /**
-       * A handler function that gets called whenever a card finishes
-       * rotating to a specified degree. If this card is the drawn card
-       * from the given deck, this component will update the text
-       * of the parent object to reflect the card.
+       * A handler function that gets called whenever a card is revealed
+       * to the user. If this card is the drawn card from the given deck,
+       * this component will display the card's description.
        *
        * @param aCard The card that finished rotating.
        */
-      void HandleCardFinishedRotating(CardObject& aCard);
+      void HandleCardRevealed(CardObject& aCard);
+
+      /**
+       * A handler function that gets called whenever a card begins
+       * fading. If this card is the drawn card from the given deck,
+       * this component will begin fading the text as well.
+       *
+       * @param aCard The card that began fading.
+       */
+      void HandleCardBeganFading(CardObject& aCard);
 
       /**
        * A handler function that gets called whenever a card finishes
@@ -58,6 +77,12 @@ namespace DeckOfIllusions
 
       CardObject* mCard;
       DeckObject* mDeck;
+
+      FadeState mState;
+
+      float mFadeTime;
+      float mTimeSpentFading;
+      float mTimeBeganFading;
   };
 }
 
