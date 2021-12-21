@@ -31,12 +31,28 @@ namespace DeckOfIllusions
       void ObserveDeck(DeckObject& aDeck);
 
     private:
+      enum class TextState
+      {
+        eNONE,
+        eTUTORIAL,
+        eCARD_DATA
+      };
+
       enum class FadeState
       {
         eNONE,
         eFADING_IN,
         eFADING_OUT
       };
+
+      /**
+       * A handler function that gets called whenever a deck is shuffled.
+       * If this deck is the observed deck, stop displaying the tutorial
+       * message.
+       *
+       * @param aDeck The deck that was shuffled.
+       */
+      void HandleDeckShuffled(DeckObject& aDeck);
 
       /**
        * A handler function that gets called whenever a card is revealed
@@ -78,7 +94,8 @@ namespace DeckOfIllusions
       CardObject* mCard;
       DeckObject* mDeck;
 
-      FadeState mState;
+      TextState mTextState;
+      FadeState mFadeState;
 
       float mFadeTime;
       float mTimeSpentFading;

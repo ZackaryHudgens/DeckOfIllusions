@@ -27,18 +27,12 @@ namespace DeckOfIllusions
        * @return True if successful, false otherwise.
        */
       bool LoadDeckFromFile(const std::string& aFile);
-
-      /**
-       * Shuffles the deck.
-       *
-       * This function will do nothing if this object does not have a
-       * DeckBehaviorComponent attached.
-       */
-      void Shuffle();
   };
 
-  typedef UrsineEngine::SignalT<DeckObject&>              CardDrawnSignal;
+  typedef UrsineEngine::SignalT<DeckObject&> DeckShuffledSignal;
+  typedef UrsineEngine::SignalT<DeckObject&> CardDrawnSignal;
 
+  extern DeckShuffledSignal DeckShuffled;
   extern CardDrawnSignal    CardDrawn;
 }
 

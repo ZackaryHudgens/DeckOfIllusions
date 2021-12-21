@@ -91,6 +91,12 @@ void DeckBehaviorComponent::Shuffle()
         break;
       }
     }
+
+    auto deckObj = dynamic_cast<DeckObject*>(parent);
+    if(deckObj != nullptr)
+    {
+      DeckShuffled.Notify(*deckObj);
+    }
   }
 }
 
@@ -383,6 +389,9 @@ void DeckBehaviorComponent::HandleCardFinishedFading(CardObject& aCard)
             // Remove the card from the deck and from the parent object.
             mDeck.GetCards().pop_back();
             parent->RemoveChild(cardObj->GetName());
+
+            // Write the deck's new state to the output file.
+            mDeck.WriteDeckToFile("resources/deck.txt");
 
             mState = State::eIDLE;
           }

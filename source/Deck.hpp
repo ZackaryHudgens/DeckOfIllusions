@@ -17,13 +17,21 @@ namespace DeckOfIllusions
       Deck();
 
       /**
-       * Loads a deck from an external file. See "deck.txt" in the
+       * Loads a deck from an external file. See "full_deck.txt" in the
        * resources directory for what a full deck looks like.
        *
        * @param aFile The file to load.
        * @return True if successful, false otherwise.
        */
       bool LoadDeckFromFile(const std::string& aFile);
+
+      /**
+       * Writes the deck to an external file.
+       *
+       * @param aFile The file to write to.
+       * @return True if successful, false otherwise.
+       */
+      bool WriteDeckToFile(const std::string& aFile);
 
       /**
        * Rearranges the deck at random.
@@ -71,6 +79,22 @@ namespace DeckOfIllusions
        */
       bool ParseRankCharacter(Card& aCard,
                               const char& aChar);
+
+      /**
+       * Returns a character to represent a given suit.
+       *
+       * @param aSuit The suit to parse.
+       * @return A character for the given suit.
+       */
+      char GetCharacterForSuit(const Suit& aSuit) const;
+
+      /**
+       * Returns a character to represent a given rank.
+       *
+       * @param aRank The rank to parse.
+       * @return A character for the given rank.
+       */
+      char GetCharacterForRank(const Rank& aRank) const;
 
       std::vector<Card> mCards;
   };
