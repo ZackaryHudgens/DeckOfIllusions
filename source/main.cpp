@@ -38,7 +38,7 @@ int main()
   comp->ObserveDeck(*deck.get());
 
   // Add the movement component to the camera.
-  auto cam = dynamic_cast<UrsineEngine::Camera*>(scene.GetObject("Camera"));
+  auto cam = scene.GetDefaultCamera();
   cam->AddComponent(std::make_unique<CameraMovementComponent>());
 
   auto camComp = cam->GetFirstComponentOfType<DeckOfIllusions::CameraMovementComponent>();
