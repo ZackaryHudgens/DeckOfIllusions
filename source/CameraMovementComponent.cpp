@@ -31,7 +31,7 @@ CameraMovementComponent::CameraMovementComponent()
 }
 
 /******************************************************************************/
-void CameraMovementComponent::Update()
+void CameraMovementComponent::Update(double aTime)
 {
   if(mMovingToDeck)
   {

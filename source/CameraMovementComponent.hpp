@@ -19,8 +19,10 @@ namespace DeckOfIllusions
 
       /**
        * Updates the component.
+       *
+       * @param aTime The time at the start of the current Scene's Update().
        */
-      void Update() override;
+      void Update(double aTime) override;
 
       /**
        * Sets the DeckObject to follow. This component will move the camera

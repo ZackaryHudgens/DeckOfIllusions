@@ -19,8 +19,10 @@ namespace DeckOfIllusions
 
       /**
        * Updates the component.
+       *
+       * @param aTime The start time of the current Scene's Update().
        */
-      void Update() override;
+      void Update(double aTime) override;
 
       /**
        * Updates the mesh's texture to reflect the given card.

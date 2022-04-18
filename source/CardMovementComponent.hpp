@@ -20,8 +20,10 @@ namespace DeckOfIllusions
 
       /**
        * Updates the component.
+       *
+       * @param aTime The start time of the current Scene's Update().
        */
-      void Update() override;
+      void Update(double aTime) override;
 
       /**
        * Moves the parent GameObject to the given position at the given speed.

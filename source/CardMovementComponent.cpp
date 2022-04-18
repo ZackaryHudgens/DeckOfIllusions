@@ -16,7 +16,7 @@ CardMovementComponent::CardMovementComponent()
 {
 }
 
-void CardMovementComponent::Update()
+void CardMovementComponent::Update(double aTime)
 {
   /**
    * Handle any card movement.

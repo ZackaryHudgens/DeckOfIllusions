@@ -27,11 +27,11 @@ CardMeshComponent::CardMeshComponent()
 }
 
 /******************************************************************************/
-void CardMeshComponent::Update()
+void CardMeshComponent::Update(double aTime)
 {
   if(mFading)
   {
-    mTimeSpentFading = env.GetTime() - mTimeBeganFading;
+    mTimeSpentFading = aTime - mTimeBeganFading;
     float transparency = 1.0 - (mTimeSpentFading / mFadeTime);
 
     GetCurrentShader()->Activate();

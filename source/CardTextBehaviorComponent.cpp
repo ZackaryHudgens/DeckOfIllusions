@@ -51,13 +51,13 @@ CardTextBehaviorComponent::CardTextBehaviorComponent()
 }
 
 /******************************************************************************/
-void CardTextBehaviorComponent::Update()
+void CardTextBehaviorComponent::Update(double aTime)
 {
   switch(mFadeState)
   {
     case FadeState::eFADING_IN:
     {
-      mTimeSpentFading = env.GetTime() - mTimeBeganFading;
+      mTimeSpentFading = aTime - mTimeBeganFading;
       float transparency = mTimeSpentFading / mFadeTime;
       transparency = std::min(transparency, 1.0f);
 
@@ -79,7 +79,7 @@ void CardTextBehaviorComponent::Update()
     }
     case FadeState::eFADING_OUT:
     {
-      mTimeSpentFading = env.GetTime() - mTimeBeganFading;
+      mTimeSpentFading = aTime - mTimeBeganFading;
       float transparency = 1.0 - (mTimeSpentFading / mFadeTime);
       transparency = std::max(transparency, 0.0f);
 
