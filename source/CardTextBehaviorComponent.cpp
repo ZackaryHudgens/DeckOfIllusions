@@ -65,10 +65,12 @@ void CardTextBehaviorComponent::Update(double aTime)
       if(parent != nullptr)
       {
         auto textObj = parent->GetFirstComponentOfType<UrsineEngine::TextComponent>();
-        textObj->SetColor(glm::vec4(1.0,
-                                    1.0,
-                                    1.0,
-                                    transparency));
+        auto shader = textObj->GetCurrentShader();
+        if(shader != nullptr)
+        {
+          shader->Activate();
+          shader->SetFloat("transparency", transparency);
+        }
       }
 
       if(transparency == 1.0f)
@@ -87,10 +89,12 @@ void CardTextBehaviorComponent::Update(double aTime)
       if(parent != nullptr)
       {
         auto textObj = parent->GetFirstComponentOfType<UrsineEngine::TextComponent>();
-        textObj->SetColor(glm::vec4(1.0,
-                                    1.0,
-                                    1.0,
-                                    transparency));
+        auto shader = textObj->GetCurrentShader();
+        if(shader != nullptr)
+        {
+          shader->Activate();
+          shader->SetFloat("transparency", transparency);
+        }
       }
 
       if(transparency == 0.0f)
@@ -124,10 +128,6 @@ void CardTextBehaviorComponent::ObserveDeck(DeckObject& aDeck)
       message << "Press [Enter] to draw a card.";
 
       textComp->SetText(message.str());
-      textComp->SetColor(glm::vec4(1.0,
-                                   1.0,
-                                   1.0,
-                                   1.0));
 
       // Update the text state.
       mTextState = TextState::eTUTORIAL;

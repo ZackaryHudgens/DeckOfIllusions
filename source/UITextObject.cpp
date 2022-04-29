@@ -14,5 +14,13 @@ UITextObject::UITextObject(const std::string& aName)
   textComp->SetCoordinateSystem(UrsineEngine::CoordinateSystem::eSCREEN_SPACE);
   textComp->SetSize(36);
 
+  std::string vertexFile = "resources/shaders/TextShader.vert";
+  std::string fragmentFile = "resources/shaders/TextShader.frag";
+  UrsineEngine::Shader textShader(vertexFile, fragmentFile);
+  textShader.Activate();
+  textShader.SetFloat("transparency", 1.0);
+  textComp->AddShader("textShader", textShader);
+  textComp->SetCurrentShader("textShader");
+
   AddComponent(std::move(textComp));
 }
