@@ -20,7 +20,7 @@ int main()
   gOptions.mCursorMode = UrsineEngine::CursorMode::eNORMAL;
 
   env.Initialize(gOptions);
-  Scene scene;
+  auto scene = std::make_unique<Scene>();
 
   // Create a DeckObject.
   auto deck = std::make_unique<DeckObject>();
@@ -38,16 +38,16 @@ int main()
   comp->ObserveDeck(*deck.get());
 
   // Add the movement component to the camera.
-  auto cam = scene.GetDefaultCamera();
+  auto cam = scene->GetDefaultCamera();
   cam->AddComponent(std::make_unique<CameraMovementComponent>());
 
   auto camComp = cam->GetFirstComponentOfType<DeckOfIllusions::CameraMovementComponent>();
   camComp->FollowDeck(*deck.get());
 
-  scene.AddObject(std::move(deck));
-  scene.AddObject(std::move(textObj));
+  scene->AddObject(std::move(deck));
+  scene->AddObject(std::move(textObj));
 
-  env.LoadScene(scene);
+  env.LoadScene(std::move(scene));
   env.Run();
 
   return 0;
