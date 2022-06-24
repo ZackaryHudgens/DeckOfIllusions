@@ -1,5 +1,6 @@
 #include <Environment.hpp>
 #include <Scene.hpp>
+#include <TextComponent.hpp>
 
 #include "CameraMovementComponent.hpp"
 #include "CardTextBehaviorComponent.hpp"
@@ -18,6 +19,9 @@ int main()
   gOptions.mWidth = 1280;
   gOptions.mHeight = 720;
   gOptions.mCursorMode = UrsineEngine::CursorMode::eNORMAL;
+
+  UrsineEngine::TextComponent::InitializeFontLibrary();
+  UrsineEngine::TextComponent::LoadFont("resources/fonts/BitterPro-Regular.ttf");
 
   env.Initialize(gOptions);
   auto scene = std::make_unique<Scene>();
@@ -49,6 +53,8 @@ int main()
 
   env.LoadScene(std::move(scene));
   env.Run();
+
+  UrsineEngine::TextComponent::UninitializeFontLibrary();
 
   return 0;
 }
